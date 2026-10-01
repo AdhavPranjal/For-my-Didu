@@ -364,10 +364,9 @@ const sisterData = {
   // ─────────────────────────────────────────────────────────────────
   // 7. BACKGROUND MUSIC SETTINGS
   // ─────────────────────────────────────────────────────────────────
-  // ↓ Replace url with a local music file path if you want: "audio/your_song.mp3"
   audio: {
-    url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=sweet-piano-romantic-113884.mp3",
-    title: "Sweet Piano Love",
+    youtubeId: "SQ4jZ-EAL88",
+    title: "Vaaroon Forever",
     artist: "For My Prishu"
   }
 };
