@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prishu 🌸 | A Digital Surprise Gift</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            rose: {
+              50: '#FFF0F3',
+              100: '#FFE5EC',
+              200: '#FFC2D1',
+              300: '#FFB3C1',
+              400: '#FF85A1',
+              500: '#FF758F',
+              600: '#FF4D6D',
+              700: '#C9184A',
+              800: '#A4133C',
+              900: '#590D22',
+            },
+            amber: {
+              300: '#FFD166'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/surprises.css">
+</head>
+<body class="relative min-h-screen text-gray-800">
+
+  <!-- Ambient Floating Heart Particles Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- 1. NAVIGATION BAR -->
+  <nav class="fixed top-0 left-0 right-0 z-40 glass-nav transition-all duration-300 px-4 py-3 md:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-2 text-2xl font-bold font-handwriting text-rose-600 hover:scale-105 transition-transform">
+        <span>Prishu</span>
+        <span class="text-xl">🌸</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+        <a href="#home" class="nav-link hover:text-rose-600 transition-colors py-1">Home</a>
+        <a href="#about" class="nav-link hover:text-rose-600 transition-colors py-1">About</a>
+        <a href="#photos" class="nav-link hover:text-rose-600 transition-colors py-1">Photos</a>
+        <a href="#letter" class="nav-link hover:text-rose-600 transition-colors py-1">Letter</a>
+        <a href="#memories" class="nav-link hover:text-rose-600 transition-colors py-1">Memories</a>
+        <a href="#games" class="nav-link hover:text-rose-600 transition-colors py-1">Games</a>
+        <a href="#surprise" class="nav-link hover:text-rose-600 transition-colors py-1">Surprise</a>
+        <a href="#sky-notepad" class="nav-link hover:text-rose-600 transition-colors py-1">Sky Notepad</a>
+        <!-- More Surprises Dropdown -->
+        <div class="nav-surprises-dropdown">
+          <button id="nav-surprises-btn" class="nav-surprises-btn" aria-haspopup="true" aria-expanded="false">
+            ✨ More Surprises <span class="caret">▾</span>
+          </button>
+          <div id="nav-surprises-menu" class="nav-dropdown-menu" role="menu">
+            <a href="#sister-quiz">🎀 Sister Quiz</a>
+            <a href="#heart-messages">💌 A Message From My Heart</a>
+            <a href="#open-when">🎁 Open When You Need a Hug</a>
+            <a href="#virtual-hug">🫂 A Little Hug From Me</a>
+            <a href="#reasons-jar">💗 100 Reasons Why I Love You</a>
+            <a href="#wish-upon-star">✨ Wish Upon a Star</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls (Sound Toggle & Mobile Menu) -->
+      <div class="flex items-center gap-3">
+        <!-- Quick Sound Button -->
+        <button id="nav-music-btn" class="px-3 py-1.5 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold flex items-center gap-1.5 transition-colors focus:outline-none">
+          <i id="nav-music-icon" class="fas fa-music text-rose-500"></i>
+          <span class="hidden sm:inline">Music</span>
+        </button>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-lg focus:outline-none">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobile-drawer" class="hidden md:hidden mt-3 pt-3 border-t border-rose-200/50 flex flex-col gap-2 text-center text-sm font-semibold">
+      <a href="#home" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Home</a>
+      <a href="#about" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">About</a>
+      <a href="#photos" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Photos</a>
+      <a href="#letter" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Letter</a>
+      <a href="#memories" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Memories</a>
+      <a href="#games" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Games</a>
+      <a href="#surprise" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Surprise</a>
+      <a href="#sky-notepad" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">Sky Notepad</a>
+      <div class="mobile-surprises-group">
+        <a href="#sister-quiz" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">🎀 Sister Quiz</a>
+        <a href="#heart-messages" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">💌 Heart Messages</a>
+        <a href="#open-when" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">🎁 Open When…</a>
+        <a href="#virtual-hug" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">🫂 Virtual Hug</a>
+        <a href="#reasons-jar" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">💗 100 Reasons</a>
+        <a href="#memory-timeline" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">🦋 Memory Timeline</a>
+        <a href="#wish-upon-star" class="py-2 hover:bg-rose-100 rounded-lg text-rose-700">✨ Wish Upon a Star</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="relative z-10 pt-20">
+
+    <!-- 1. HERO SECTION -->
+    <section id="home" class="min-h-[90vh] flex flex-col items-center justify-center text-center px-4 py-12 relative">
+      <div class="glass-card p-8 md:p-14 max-w-3xl w-full border-2 border-rose-200 shadow-2xl relative overflow-hidden">
+        
+        <!-- Decorative Top Badge -->
+        <span class="inline-block px-4 py-1.5 rounded-full bg-rose-100 text-rose-600 font-bold text-xs uppercase tracking-widest mb-6 animate-pulse">
+          ✨ A Personalized Surprise Gift ✨
+        </span>
+
+        <!-- Hero Main Title -->
+        <h1 id="hero-title" class="text-4xl sm:text-6xl md:text-7xl font-extrabold font-heading text-gradient mb-4">
+          Prishu 🌸
+        </h1>
+
+        <!-- Hero Subtitle -->
+        <p id="hero-subtitle" class="text-lg md:text-xl text-gray-700 max-w-xl mx-auto font-medium mb-8 leading-relaxed">
+          Partner in crime, secret keeper, and my forever guardian angel.
+        </p>
+
+        <!-- Animated Action Button -->
+        <button id="hero-open-btn" class="px-10 py-4 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-extrabold text-base md:text-lg shadow-xl animate-glow hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 mx-auto">
+          <span>Open Your Surprise</span>
+          <span class="text-xl">🎁</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- 2. ABOUT MY DIDU SECTION -->
+    <section id="about" class="py-16 px-4 md:px-8 max-w-6xl mx-auto">
+      <div id="about-content"></div>
+    </section>
+
+    <!-- 3. PHOTO GALLERY SECTION -->
+    <section id="photos" class="py-16 px-4 md:px-8 max-w-6xl mx-auto">
+      <div class="text-center mb-10">
+        <span class="text-xs uppercase tracking-widest text-rose-500 font-bold">Captured Memories</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold font-heading text-rose-700 mt-1">Precious Moments 📸</h2>
+        <p class="text-xs md:text-sm text-gray-600 mt-2 max-w-md mx-auto">Click any photo to open full-screen lightbox view!</p>
+        
+        <!-- Category Filter Buttons -->
+        <div id="gallery-filters" class="flex flex-wrap items-center justify-center gap-2 mt-6"></div>
+      </div>
+
+      <!-- Responsive Photo Grid -->
+      <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- 4. LOVE LETTER SECTION -->
+    <section id="letter" class="py-16 px-4 md:px-8 max-w-4xl mx-auto text-center">
+      <div class="mb-6">
+        <span class="text-xs uppercase tracking-widest text-rose-500 font-bold">From The Heart</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold font-heading text-rose-700 mt-1">A Letter For My Prishu 💌</h2>
+      </div>
+
+      <div id="letter-container"></div>
+    </section>
+
+    <!-- 5. OUR MEMORIES SECTION -->
+    <section id="memories" class="py-16 px-4 md:px-8 max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="text-xs uppercase tracking-widest text-rose-500 font-bold">Timeline Of Love</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold font-heading text-rose-700 mt-1">Our Journey Together ⏳</h2>
+      </div>
+
+      <div id="memories-timeline"></div>
+    </section>
+
+    <!-- 6. GAMES SECTION -->
+    <section id="games" class="py-16 px-4 md:px-8 max-w-6xl mx-auto">
+      <div class="text-center mb-10">
+        <span class="text-xs uppercase tracking-widest text-rose-500 font-bold">Fun & Laughs</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold font-heading text-rose-700 mt-1">Let’s Play Together 🎮</h2>
+        <p class="text-xs md:text-sm text-gray-600 mt-2">Pick a browser game to play together!</p>
+      </div>
+
+      <!-- Games Hub Menu Container -->
+      <div id="games-hub-container"></div>
+
+      <!-- Active Game Board Container -->
+      <div id="game-view-container" class="hidden"></div>
+    </section>
+
+    <!-- 7. SURPRISE SECTION -->
+    <section id="surprise" class="py-20 px-4 md:px-8 max-w-4xl mx-auto">
+      <div id="surprise-container"></div>
+    </section>
+
+    <!-- 8. DIARY / SKY NOTEPAD SECTION -->
+    <section id="sky-notepad" class="diary-section">
+
+      <!-- Soft CSS-only sky decorations (no full-screen canvas) -->
+      <div class="diary-sky-deco" aria-hidden="true">
+        <div class="deco-cloud deco-cloud--1"></div>
+        <div class="deco-cloud deco-cloud--2"></div>
+        <div class="deco-cloud deco-cloud--3"></div>
+        <span class="deco-heart deco-heart--1">💕</span>
+        <span class="deco-heart deco-heart--2">🌸</span>
+        <span class="deco-heart deco-heart--3">✨</span>
+      </div>
+
+      <div class="diary-wrapper">
+
+        <!-- Section Header -->
+        <div class="diary-header">
+          <span class="diary-badge">📖 Our Shared Memory Book</span>
+          <h2 class="diary-title">Our Little Sky Diary 🌸</h2>
+          <p class="diary-subtitle">Draw, doodle &amp; write together on the same page ✨</p>
+        </div>
+
+        <!-- Turn Toggle -->
+        <div class="diary-turn-toggle" role="group" aria-label="Select whose turn it is">
+          <button id="diary-turn-pranjal" class="diary-turn-btn diary-turn-active" aria-pressed="true">
+            <span class="diary-turn-icon">✍️</span><span>Pranjal's Turn</span>
+          </button>
+          <span class="diary-turn-divider">↔</span>
+          <button id="diary-turn-didu" class="diary-turn-btn" aria-pressed="false">
+            <span class="diary-turn-icon">🌸</span><span>Didu's Turn</span>
+          </button>
+        </div>
+
+        <!-- The Diary Book -->
+        <div class="diary-book" id="diary-book">
+
+          <!-- Spiral Binding -->
+          <div class="diary-binding" aria-hidden="true">
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+            <div class="diary-spiral-coil"></div>
+          </div>
+
+          <!-- Diary Page (the drawing surface) -->
+          <div class="diary-page" id="diary-page">
+
+            <!-- Pink ribbon bookmark -->
+            <div class="diary-ribbon" aria-hidden="true">
+              <div class="diary-ribbon-top"></div>
+            </div>
+
+            <!-- Page corner fold -->
+            <div class="diary-page-corner" aria-hidden="true"></div>
+
+            <!-- Drawing canvas directly on paper -->
+            <canvas id="diary-draw-canvas"
+              aria-label="Draw on the diary page — use mouse or touch"
+              role="img">
+            </canvas>
+
+            <!-- Draw hint (fades on first stroke) -->
+            <div class="diary-hint" id="diary-hint" aria-hidden="true">
+              <div class="diary-hint-icon">✏️</div>
+              <p>Pick a tool below &amp; draw together!</p>
+            </div>
+
+            <!-- Active user tag on page -->
+            <div class="diary-page-tag">
+              <span id="diary-tag-text">✍️ Pranjal</span>
+            </div>
+
+          </div><!-- /.diary-page -->
+        </div><!-- /.diary-book -->
+
+        <!-- Compact Drawing Toolbar (directly below diary) -->
+        <div class="diary-toolbar" id="diary-toolbar" role="toolbar" aria-label="Drawing tools">
+
+          <!-- Row 1: Tools · Colors · Size · Undo/Redo/Clear -->
+          <div class="diary-tb-row">
+
+            <div class="diary-tb-group" role="group" aria-label="Drawing tools">
+              <button id="dt-pencil" class="diary-tb-btn diary-tb-tool diary-tool-active" data-tool="pencil" title="Pencil — fine natural lines">
+                <span class="tb-icon">✏️</span><span class="tb-label">Pencil</span>
+              </button>
+              <button id="dt-pen" class="diary-tb-btn diary-tb-tool" data-tool="pen" title="Pen — smooth dark strokes">
+                <span class="tb-icon">🖊️</span><span class="tb-label">Pen</span>
+              </button>
+              <button id="dt-brush" class="diary-tb-btn diary-tb-tool" data-tool="brush" title="Brush — thick soft strokes">
+                <span class="tb-icon">🖌️</span><span class="tb-label">Brush</span>
+              </button>
+              <button id="dt-eraser" class="diary-tb-btn diary-tb-tool" data-tool="eraser" title="Eraser">
+                <span class="tb-icon">🧹</span><span class="tb-label">Eraser</span>
+              </button>
+            </div>
+
+            <div class="diary-tb-sep"></div>
+
+            <div class="diary-tb-group" role="group" aria-label="Color palette">
+              <button class="diary-color-dot diary-color-active" data-color="#2D3047" style="background:#2D3047" title="Dark Navy" aria-label="Dark Navy"></button>
+              <button class="diary-color-dot" data-color="#FF4D6D" style="background:#FF4D6D" title="Rose" aria-label="Rose"></button>
+              <button class="diary-color-dot" data-color="#C77DFF" style="background:#C77DFF" title="Lavender" aria-label="Lavender"></button>
+              <button class="diary-color-dot" data-color="#6CB4E4" style="background:#6CB4E4" title="Sky Blue" aria-label="Sky Blue"></button>
+              <button class="diary-color-dot" data-color="#06D6A0" style="background:#06D6A0" title="Mint" aria-label="Mint"></button>
+              <button class="diary-color-dot" data-color="#FFD166" style="background:#FFD166" title="Amber" aria-label="Amber"></button>
+              <button class="diary-color-dot" data-color="#FF9F1C" style="background:#FF9F1C" title="Orange" aria-label="Orange"></button>
+              <button class="diary-color-dot" data-color="#FFFFFF" style="background:#fff;outline:1.5px solid #ddd" title="White" aria-label="White"></button>
+              <input type="color" id="dt-custom-color" value="#2D3047" title="Custom color" aria-label="Pick a custom color">
+            </div>
+
+            <div class="diary-tb-sep"></div>
+
+            <div class="diary-tb-group diary-size-group">
+              <label class="diary-tb-label" for="dt-size">Size</label>
+              <input type="range" id="dt-size" min="1" max="28" value="4" aria-label="Brush size">
+              <span class="diary-size-badge" id="dt-size-label">4</span>
+            </div>
+
+            <div class="diary-tb-sep"></div>
+
+            <!-- Eraser size controls — visible only when Eraser tool is active -->
+            <div id="dt-eraser-controls" class="diary-tb-group" role="group" aria-label="Eraser size" style="display:none;">
+              <span class="diary-tb-label">🧹 Eraser</span>
+              <button id="dt-eraser-minus" class="diary-tb-btn diary-eraser-step-btn" title="Decrease eraser size" aria-label="Decrease eraser size">−</button>
+              <span class="diary-size-badge" id="dt-eraser-size-label" style="min-width:36px;text-align:center;">24px</span>
+              <button id="dt-eraser-plus"  class="diary-tb-btn diary-eraser-step-btn" title="Increase eraser size" aria-label="Increase eraser size">+</button>
+            </div>
+
+            <div class="diary-tb-sep"></div>
+
+            <div class="diary-tb-group">
+              <button id="dt-undo" class="diary-tb-btn" title="Undo">↩ Undo</button>
+              <button id="dt-redo" class="diary-tb-btn" title="Redo">↪ Redo</button>
+              <button id="dt-clear" class="diary-tb-btn diary-tb-btn--danger" title="Clear diary page">🗑 Clear</button>
+            </div>
+
+          </div><!-- /.diary-tb-row -->
+
+          <!-- Row 2: Stickers · Save · Download -->
+          <div class="diary-tb-row diary-tb-row--sm">
+
+            <div class="diary-tb-group" role="group" aria-label="Stickers">
+              <span class="diary-tb-label">Stickers:</span>
+              <button class="diary-sticker-btn" data-sticker="❤️" title="Heart">❤️</button>
+              <button class="diary-sticker-btn" data-sticker="🌸" title="Cherry blossom">🌸</button>
+              <button class="diary-sticker-btn" data-sticker="⭐" title="Star">⭐</button>
+              <button class="diary-sticker-btn" data-sticker="☁️" title="Cloud">☁️</button>
+              <button class="diary-sticker-btn" data-sticker="🌈" title="Rainbow">🌈</button>
+              <button class="diary-sticker-btn" data-sticker="😊" title="Smiley">😊</button>
+              <button class="diary-sticker-btn" data-sticker="💫" title="Sparkle">💫</button>
+              <button class="diary-sticker-btn" data-sticker="🦋" title="Butterfly">🦋</button>
+            </div>
+
+            <div class="diary-tb-sep"></div>
+
+            <div class="diary-tb-group">
+              <button id="dt-save" class="diary-save-btn">💾 Save Diary ♡</button>
+              <button id="dt-download" class="diary-download-btn">⬇️ Download</button>
+            </div>
+
+          </div><!-- /.diary-tb-row--sm -->
+
+        </div><!-- /.diary-toolbar -->
+
+      </div><!-- /.diary-wrapper -->
+
+    </section><!-- /#sky-notepad -->
+
+    <!-- Save toast notification -->
+    <div id="diary-toast" class="diary-toast diary-toast--hidden" role="status" aria-live="polite"></div>
+
+
+    <!-- ============================================================
+         FEATURE 7: SISTER QUIZ
+         ============================================================ -->
+    <section id="sister-quiz" class="surprise-section">
+      <div class="section-content-wrapper">
+        <div class="reveal" style="margin-bottom:2rem;">
+          <span class="surprise-badge">🎀 Mini Game</span>
+          <h2 class="surprise-title">How Well Do You Know Your Sister?</h2>
+          <p class="surprise-subtitle">Let's find out just how well you know us, Didu! 💕</p>
+        </div>
+
+        <div class="quiz-card reveal">
+          <!-- Progress -->
+          <div class="quiz-progress-bar-wrap">
+            <div class="quiz-progress-bar" style="width:0%"></div>
+          </div>
+          <div class="quiz-step-label">Question 1 of 5</div>
+
+          <!-- Game view -->
+          <div class="quiz-game">
+            <div class="quiz-question"></div>
+            <div class="quiz-options"></div>
+            <div class="quiz-explanation"></div>
+            <div class="quiz-nav">
+              <button id="quiz-prev" class="quiz-btn quiz-btn--secondary" disabled>← Back</button>
+              <button id="quiz-next" class="quiz-btn quiz-btn--primary" disabled>Next →</button>
+            </div>
+          </div>
+
+          <!-- Result view -->
+          <div class="quiz-result" style="display:none;">
+            <div class="quiz-score-circle"><span></span></div>
+            <div class="quiz-score-emoji" style="font-size:2rem;margin-bottom:0.5rem;"></div>
+            <div class="quiz-result-msg"></div>
+            <div class="quiz-result-sub"></div>
+            <button id="quiz-replay" class="quiz-btn quiz-btn--primary" style="margin-top:1rem;">🔄 Play Again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 1: A MESSAGE FROM MY HEART
+         ============================================================ -->
+    <section id="heart-messages" class="surprise-section">
+      <div class="section-content-wrapper">
+        <div class="reveal" style="margin-bottom:2rem;">
+          <span class="surprise-badge">💌 Just For You</span>
+          <h2 class="surprise-title">A Message From My Heart</h2>
+          <p class="surprise-subtitle">Click any heart to read a secret message I've been saving just for you ✨</p>
+        </div>
+        <div class="hearts-grid reveal"></div>
+      </div>
+      <!-- Modal -->
+      <div class="heart-modal-overlay" role="dialog" aria-modal="true" aria-label="Heart message">
+        <div class="heart-msg-card">
+          <div class="heart-floating-hearts"></div>
+          <button class="heart-msg-close" aria-label="Close message">✕</button>
+          <div class="heart-msg-icon">💖</div>
+          <div class="heart-msg-title">A Message From Pranjal 💌</div>
+          <div class="heart-msg-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 3: OPEN WHEN YOU NEED A HUG
+         ============================================================ -->
+    <section id="open-when" class="surprise-section">
+      <div class="section-content-wrapper">
+        <div class="reveal" style="margin-bottom:2rem;">
+          <span class="surprise-badge">🎁 Open Me</span>
+          <h2 class="surprise-title">Open When You Need a Hug</h2>
+          <p class="surprise-subtitle">Four little letters, written with all my heart. Open one whenever you need it. 💕</p>
+        </div>
+        <div class="envelopes-grid"></div>
+        <div class="envelope-reader">
+          <div class="envelope-paper"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 4: VIRTUAL HUG
+         ============================================================ -->
+    <section id="virtual-hug" class="surprise-section">
+      <div class="section-content-wrapper">
+        <div class="reveal" style="margin-bottom:2rem;">
+          <span class="surprise-badge">🫂 Always Here</span>
+          <h2 class="surprise-title">A Little Hug From Me</h2>
+          <p class="surprise-subtitle">Press the button and feel the warmth from across the distance 💖</p>
+        </div>
+        <div class="hug-stage reveal">
+          <div class="hug-chars">
+            <span class="hug-char hug-char-a" aria-label="Pranjal">👧</span>
+            <div class="hug-hearts-burst"></div>
+            <span class="hug-char hug-char-b" aria-label="Didu">🧕</span>
+          </div>
+          <div class="hug-message">Sending you the biggest hug, my Didu! 🤗<br>I love you more than words can ever say. 💖</div>
+          <div class="hug-action-btns">
+            <button class="hug-trigger-btn">🫂 Send Me a Hug!</button>
+            <button class="hug-replay-btn">🔄 Again!</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 5: 100 REASONS WHY I LOVE YOU
+         ============================================================ -->
+    <section id="reasons-jar" class="surprise-section">
+      <div class="section-content-wrapper">
+        <div class="reveal" style="margin-bottom:2rem;">
+          <span class="surprise-badge">💗 100 Reasons</span>
+          <h2 class="surprise-title">100 Reasons Why I Love You</h2>
+          <p class="surprise-subtitle">Click any note or the jar to discover one reason at a time 🌸</p>
+        </div>
+        <div class="jar-container reveal">
+          <!-- Jar SVG -->
+          <button class="jar-visual" aria-label="Click jar to open a random reason">
+            <svg class="jar-svg" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="jarGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="rgba(255,182,193,0.35)"/>
+                  <stop offset="100%" stop-color="rgba(199,125,255,0.25)"/>
+                </linearGradient>
+              </defs>
+              <!-- Lid -->
+              <rect x="28" y="18" width="64" height="18" rx="9" fill="#FF4D6D" opacity="0.9"/>
+              <rect x="22" y="30" width="76" height="10" rx="5" fill="#C9184A" opacity="0.75"/>
+              <!-- Body -->
+              <rect x="18" y="40" width="84" height="108" rx="18" fill="url(#jarGrad)" stroke="rgba(255,182,193,0.7)" stroke-width="2"/>
+              <!-- Shine -->
+              <rect x="26" y="50" width="10" height="50" rx="5" fill="rgba(255,255,255,0.35)"/>
+              <!-- Hearts inside -->
+              <text x="38" y="82" font-size="18" opacity="0.6">💕</text>
+              <text x="62" y="100" font-size="14" opacity="0.5">✨</text>
+              <text x="44" y="118" font-size="16" opacity="0.55">🌸</text>
+              <text x="70" y="76" font-size="12" opacity="0.5">💗</text>
+            </svg>
+          </button>
+          <div class="jar-notes-grid"></div>
+        </div>
+      </div>
+      <!-- Reason Modal -->
+      <div class="reason-modal-overlay" role="dialog" aria-modal="true" aria-label="Reason">
+        <div class="reason-card">
+          <button class="reason-close" aria-label="Close">✕</button>
+          <div class="reason-num">Reason 1 of 100</div>
+          <div class="reason-text"></div>
+          <div class="reason-nav">
+            <button class="reason-nav-btn" id="reason-prev">← Prev</button>
+            <button class="reason-nav-btn reason-nav-btn--random" id="reason-random">🎲 Random</button>
+            <button class="reason-nav-btn" id="reason-next">Next →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 6: WISH UPON A STAR
+         ============================================================ -->
+    <section id="wish-upon-star" class="surprise-section">
+      <div class="stars-field" aria-hidden="true"></div>
+      <div class="shooting-star" aria-hidden="true">🌠</div>
+      <div class="section-content-wrapper" style="position:relative;z-index:3;padding:4rem 1rem;">
+        <div class="reveal" style="margin-bottom:1.5rem;">
+          <span class="surprise-badge">✨ Make A Wish</span>
+          <h2 class="surprise-title">Wish Upon a Star</h2>
+          <p class="surprise-subtitle" style="color:rgba(220,180,255,0.8);">Click a star to read a special wish. Then make your own! 🌙</p>
+        </div>
+        <button class="make-wish-btn">🌠 Make a Wish!</button>
+        <div class="wish-message-box"><p></p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 10. FOOTER -->
+  <footer class="py-10 text-center border-t border-rose-200/50 bg-white/60 backdrop-blur-sm relative z-10 mt-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="text-lg font-bold font-handwriting text-rose-600 mb-1">
+        Made with endless love, just for my Prishu 🌸
+      </p>
+      <p class="text-xs text-gray-500">
+        &copy; <span id="footer-year">2026</span> • A Digital Surprise Gift
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT INCLUDES -->
+  <!-- Magical cursor trail (loads first — covers whole page) -->
+  <script src="js/cursorMagic.js"></script>
+  <script src="js/sisterData.js"></script>
+  <script src="js/floatingHearts.js"></script>
+  <script src="js/musicPlayer.js"></script>
+  <script src="js/lightbox.js"></script>
+  <script src="js/letterEnvelope.js"></script>
+  <script src="js/giftSurprise.js"></script>
+
+  <!-- GAME SCRIPTS -->
+  <script src="js/games/wouldYouRather.js"></script>
+  <script src="js/games/memoryGame.js"></script>
+  <script src="js/games/sisterQuiz.js"></script>
+  <script src="js/games/truthOrDare.js"></script>
+  <script src="js/games/guessMemory.js"></script>
+  <script src="js/games/gamesHub.js"></script>
+
+  <!-- SKY NOTEPAD SCRIPT -->
+  <script src="js/skyNotepad.js"></script>
+
+  <!-- MAIN APP SCRIPT -->
+  <script src="js/app.js"></script>
+
+  <!-- PHOTO MAGIC — Hover Animations -->
+  <script src="js/photoMagic.js"></script>
+
+  <!-- 7 SURPRISE FEATURES -->
+  <script src="js/surprises.js"></script>
+
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
